@@ -15,15 +15,16 @@ public class OrderLine {
     private double lineTotal;
     
     //Getters and Setters
-    
     public void setOrderLineId(int orderLineIdIn)
     {
-        orderLineId= orderLineIdIn;// CHECK IT
+        orderLineId = orderLineIdIn;
     }
+    
+    
     public int getOrderLineId()
     {
         return orderLineId;
-    }
+    }            
     
     //Getter
     public Animal getAnimalBought()
@@ -31,18 +32,29 @@ public class OrderLine {
         return animalBought;
     }
     
+    //TODO added stage 8 getLineTotal()
+    // DONE
+    // Getter
+    public double getLineTotal()
+    {
+        return lineTotal;
+    }
+    
+    
+    
     //Setter
     public void setAnimalBought(Animal animalBoughtIn)
     {
         animalBought = animalBoughtIn;
     }
     
-    //
-    //Constructors- 0 input parameter //
+
+    
+    //Constructors- 0 input parameter
     public OrderLine()
     {
         orderLineId = 0;
-        animalBought = new Animal();// constructor TODO
+        animalBought = new Animal();
         lineTotal = 0;
     }
     
@@ -55,20 +67,20 @@ public class OrderLine {
     }
     
     //Constructors- 2 input parameter (ALL except lineTotal- which is calculated)
-    // efficient for Shop.java
     public OrderLine(int orderLineIdIn, Animal animalIn)
     {
         orderLineId = orderLineIdIn;
         animalBought = animalIn;
-        lineTotal = animalBought.getCost();// TODO 
+        lineTotal = animalBought.getCost();
     }
     
-    // Constructor - just Animal
+    //Constructor- just Animal
     public OrderLine(Animal animalIn)
     {
-        orderLineId=0;
-        animalBought=animalIn;
-        lineTotal=animalBought.getCost();
+        orderLineId = 0;
+        animalBought = animalIn;
+        lineTotal = animalBought.getCost();
     }
+    
     
 }

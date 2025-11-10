@@ -1,8 +1,7 @@
-package models;// added in stage 7
-
-
+package models;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -20,26 +19,42 @@ public class Order {
     private Date orderDate;
     private String status;
     private double orderTotal;
-    //HashMap<Date_Type_of_Key, Date_Type_of_Value>
-    //Integer- orderLineId
+    
     private HashMap<Integer, OrderLine> orderLines;
+    // added stage 8 calculate orderTotal
+    // create a method to calculate the totsl
+    public void calculateOrderTotal()
+    {
+        //reset
+        orderTotal = 0;
+        for(Map.Entry<Integer,OrderLine> olMapEntry : orderLines.entrySet())//fix imports
+        {
+            // retrieves the value from
+            OrderLine actualOrderLine = olMapEntry.getValue();
+            // TODO create a getLineTotal() method inside orderLine 
+            // DONE
+            orderTotal = orderTotal + actualOrderLine.getLineTotal();
+                        
+        }
+    }
     
     
-    //added at 7 stage
     public void addOrderLine(OrderLine ol)
     {
         int orderLineId = 0;
         
-       while(orderLines.containsKey(orderLineId))
-                {
-                    orderLineId++;
-                }
-       
-       ol.setOrderLineId(orderLineId);
-       // create set OrderLineId() in OrderLIne TODO
-       orderLines.put(orderLineId, ol);/// tptdp
+        while(orderLines.containsKey(orderLineId))
+        {
+            orderLineId++;
+        }
+        
+        ol.setOrderLineId(orderLineId); 
+                //create setOrderLineId in OrderLine
+        orderLines.put(orderLineId, ol);
+        
+        calculateOrderTotal();//
     }
-    
+   
     //Getters and Setters
     
     //Getter for orderLines
@@ -53,6 +68,24 @@ public class Order {
     {
         orderLines = orderLinesIn;
     }
+    
+    // added in stage 8
+    // getter 
+    public Date getOrderDate()
+    {
+        return orderDate;
+    }   
+    //getter
+    public double getOrderTotal()
+    {
+        return orderTotal;
+    }        
+    //getter
+    public String getStatus()
+    {
+        return status;
+    }
+    // end added stage 8
     
     //Constructors - 0 input parameter
     public Order()
@@ -74,7 +107,5 @@ public class Order {
         orderTotal = orderTotalIn;
         orderLines = new HashMap();
     }
-    
-    
-    
+            
 }

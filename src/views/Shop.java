@@ -10,30 +10,35 @@ import models.Animal;
 import models.DBManager;
 import models.Order;
 import models.OrderLine;
+import models.ZooKeeper;
 
 /**
  *
- * @author 30246196
+ * @author jahood
  */
 public class Shop extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Shop.class.getName());
-    // move allAnimals here to define as private variable
-    private ArrayList<Animal> allAnimals;// global variable
+
+    private ArrayList<Animal> allAnimals;
+    private Order currentOrder;
+    private ZooKeeper loggedInZooKeeper;
     
-    private Order currentOrder;// fix imports
+    
     /**
      * Creates new form Shop
      */
-    public Shop() {
-        // added
-        currentOrder= new Order();// empty order
+    //public Shop() {// modify in stage 8 to add ZooKepeer and Order
+    public Shop(ZooKeeper zk, Order o) {
         
-        DBManager db = new  DBManager();
+        //currentOrder = new Order();// modify in stage 8
+        currentOrder = o;
+        loggedInZooKeeper = zk;
         
-        //ArrayList<Animal> allAnimals = db.loadAnimals();
-        // to make this variable global and the same defined upp
-        allAnimals = db.loadAnimals();       
+        
+        DBManager db = new DBManager();
+        allAnimals = db.loadAnimals();
+               
         
         initComponents();
     }
@@ -47,50 +52,47 @@ public class Shop extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblWelcomeShop = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        lstAnimalCategory = new javax.swing.JList<>();
+        lstAnimalCategories = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         lstAnimals = new javax.swing.JList<>();
-        lblAnimalCategory = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         btnAddToBasket = new javax.swing.JButton();
         lblConfirmation = new javax.swing.JLabel();
-        lblViewBasket = new javax.swing.JButton();
+        btnViewBasket = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lblWelcomeShop.setText("Welcome to our shop! ");
-
-        lstAnimalCategory.setModel(new javax.swing.AbstractListModel<String>() {
+        lstAnimalCategories.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Bird", "Fish" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        lstAnimalCategory.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        lstAnimalCategories.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                lstAnimalCategoryValueChanged(evt);
+                lstAnimalCategoriesValueChanged(evt);
             }
         });
-        jScrollPane1.setViewportView(lstAnimalCategory);
+        jScrollPane1.setViewportView(lstAnimalCategories);
 
         jScrollPane2.setViewportView(lstAnimals);
 
-        lblAnimalCategory.setText("Select Animal Category ");
+        jLabel1.setText("Select Animal Category:");
 
-        jLabel1.setText("Select Animals to Buy:");
+        jLabel2.setText("Select Animal to Buy:");
 
-        btnAddToBasket.setText("ADD TO BASKET");
+        btnAddToBasket.setText("Add to Basket");
         btnAddToBasket.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddToBasketActionPerformed(evt);
             }
         });
 
-        lblViewBasket.setText("VIEW BASKET");
-        lblViewBasket.addActionListener(new java.awt.event.ActionListener() {
+        btnViewBasket.setText("View Basket");
+        btnViewBasket.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lblViewBasketActionPerformed(evt);
+                btnViewBasketActionPerformed(evt);
             }
         });
 
@@ -99,126 +101,103 @@ public class Shop extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(btnAddToBasket)
-                        .addGap(77, 77, 77)
-                        .addComponent(lblViewBasket, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblAnimalCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 210, Short.MAX_VALUE)
-                        .addGap(63, 63, 63))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(131, 131, 131))
+                .addGap(36, 36, 36)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblConfirmation, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(58, 58, 58)
-                                .addComponent(lblWelcomeShop, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblConfirmation, javax.swing.GroupLayout.PREFERRED_SIZE, 389, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addGap(34, 34, 34)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAddToBasket, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)
+                        .addComponent(btnViewBasket, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(lblWelcomeShop)
-                .addGap(18, 18, 18)
+                .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblAnimalCategory)
-                    .addComponent(jLabel1))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(lblConfirmation, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblConfirmation)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAddToBasket)
-                    .addComponent(lblViewBasket))
-                .addContainerGap(51, Short.MAX_VALUE))
+                    .addComponent(btnViewBasket))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void lstAnimalCategoryValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstAnimalCategoryValueChanged
+    private void lstAnimalCategoriesValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstAnimalCategoriesValueChanged
         
-        // TODO add your handling code here:
-        String selectedAnimalCategory = lstAnimalCategory.getSelectedValue();
+        String selectedAnimalCategory = lstAnimalCategories.getSelectedValue();
         
-        DefaultListModel animalsModel = new DefaultListModel();// fix imports
+        DefaultListModel animalsModel = new DefaultListModel();
         
-        
-        // check type of error
-        // seeeee petrolCar file 
-        for(Animal a: allAnimals)
+        for(Animal a : allAnimals)
         {
-            //                              package.class name
-            if(a.getClass().getName().equals("models."+ selectedAnimalCategory))
+                                            //package.class
+            if(a.getClass().getName().equals("models." + selectedAnimalCategory))
             {
                 animalsModel.addElement(a);
             }
         }
         
         lstAnimals.setModel(animalsModel);
-    }//GEN-LAST:event_lstAnimalCategoryValueChanged
+               
+    }//GEN-LAST:event_lstAnimalCategoriesValueChanged
 
     private void btnAddToBasketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddToBasketActionPerformed
-        // TODO add your handling code here:
         
-        // error detection
-        // select an animal from 2nd list
-        // unselected is -1
         if(lstAnimals.getSelectedIndex() != -1)
         {
-            // get the animal which is selected
-            // convert into an Animal
-            //Animal selectedAnimal = (Animal)lstAnimals.getSelectedValue();
-            // getSelectedValue() returns a String, it cannot convert directly into String
-            //change to: top level Object that includes a String
             Object selectedAnimalObject = (Object)lstAnimals.getSelectedValue();
-            Animal selectedAnimal =(Animal)selectedAnimalObject;
-            // now that I got the Animal I can check on Animal
-            if (selectedAnimal.getIsAvailable() == true)
+            Animal selectedAnimal = (Animal)selectedAnimalObject;
+            
+            if(selectedAnimal.getIsAvailable() == true)
             {
-                // create OrderLine with that animal
-                OrderLine ol = new OrderLine(0,selectedAnimal);// ctrl + space bar to get the parameters
-                
-                // create an getter for orderlineId
-                // DO NOT COPY THIS LINE
-                //currentOrder.getOrderLines().put (ol.getOrderLineId() ,ol);
-                //-------------
-                
+                //Create OrderLine with that animal
+                OrderLine ol = new OrderLine(selectedAnimal);
+           
                 currentOrder.addOrderLine(ol);
                 lblConfirmation.setText("Animal Added to Basket");
             }
             else
             {
-                lblConfirmation.setText("Sorry - Animal not available");
+                lblConfirmation.setText("Sorry- Animal is NOT Available");
             }
         }
         else
         {
-            lblConfirmation.setText("error: Select Animal First");            
+            lblConfirmation.setText("Error: Select Animal First");
         }
         
     }//GEN-LAST:event_btnAddToBasketActionPerformed
 
-    private void lblViewBasketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lblViewBasketActionPerformed
-        // TODO add your handling code here:
-        Basket b = new Basket(currentOrder);
+    private void btnViewBasketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewBasketActionPerformed
+        
+        //Basket b = new Basket(currentOrder);// modify
+        Basket b = new Basket(loggedInZooKeeper,currentOrder);
         b.setVisible(true);
         this.setVisible(false);
-    }//GEN-LAST:event_lblViewBasketActionPerformed
+        // added stage 8
+        // pass the zookeeper
+        
+               
+    }//GEN-LAST:event_btnViewBasketActionPerformed
 
     /**
      * @param args the command line arguments
@@ -242,19 +221,19 @@ public class Shop extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new Shop().setVisible(true));
+      // added in stage 8 comment this line 'java...
+     //   java.awt.EventQueue.invokeLater(() -> new Shop().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddToBasket;
+    private javax.swing.JButton btnViewBasket;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JLabel lblAnimalCategory;
     private javax.swing.JLabel lblConfirmation;
-    private javax.swing.JButton lblViewBasket;
-    private javax.swing.JLabel lblWelcomeShop;
-    private javax.swing.JList<String> lstAnimalCategory;
+    private javax.swing.JList<String> lstAnimalCategories;
     private javax.swing.JList<String> lstAnimals;
     // End of variables declaration//GEN-END:variables
 }

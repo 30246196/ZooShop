@@ -1,5 +1,4 @@
-package models;//added in stage 7
-
+package models;
 import java.util.Date;
 import java.util.HashMap;
 

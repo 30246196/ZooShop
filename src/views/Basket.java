@@ -1,49 +1,52 @@
-
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
 package views;
-
-
-
-
 
 import java.util.Map;
 import javax.swing.table.DefaultTableModel;
+import models.DBManager;
 import models.Order;
 import models.OrderLine;
+import models.ZooKeeper;
 
 /**
  *
- * @author 30246196
+ * @author jahood
  */
 public class Basket extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Basket.class.getName());
 
+    private Order currentOrder;
+    private ZooKeeper loggedInZooKeeper;
+    
     /**
      * Creates new form Basket
-     * @param currentOrder
      */
-    public Basket(Order currentOrder) // fix imports
-    {
+    //public Basket(ZooKeeper zk,Order currentOrder) {// fix imports
+    public Basket(ZooKeeper zk,Order o) {// fix imports
+        
+        loggedInZooKeeper = zk;
+        currentOrder =o;
+        
         initComponents();
         
         DefaultTableModel animalBasketModel = (DefaultTableModel)tblAnimalBasket.getModel();
-        // entrySet convert a hashmap into smth readable
-        for(Map.Entry<Integer,OrderLine> olMapEntry : currentOrder.getOrderLines().entrySet())// fix imports
+        
+        for(Map.Entry<Integer, OrderLine> olMapEntry : currentOrder.getOrderLines().entrySet())//global variable
         {
             OrderLine actualOrderLine = olMapEntry.getValue();
-           //put into the table in a list first
-           animalBasketModel.addRow(new Object[]
-           {
-                   // animal id animal cost
-                actualOrderLine.getAnimalBought().getAnimalId(),// TODO
-                actualOrderLine.getAnimalBought().getType() + " -"+
-                actualOrderLine.getAnimalBought().getName() + " £" ,
-                actualOrderLine.getAnimalBought().getCost()
-            } );
             
-         tblAnimalBasket.setModel(animalBasketModel);
+            animalBasketModel.addRow(new Object[] {
+                actualOrderLine.getAnimalBought().getAnimalId(),
+                actualOrderLine.getAnimalBought().getType() + "-" + actualOrderLine.getAnimalBought().getName(),
+                "£" + actualOrderLine.getAnimalBought().getCost()
+            });
         }
-            
+        
+        tblAnimalBasket.setModel(animalBasketModel);
     }
 
     /**
@@ -55,13 +58,11 @@ public class Basket extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblBasket = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblAnimalBasket = new javax.swing.JTable();
+        btnOrderAnimals = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        lblBasket.setText("BASKET");
 
         tblAnimalBasket.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -73,6 +74,13 @@ public class Basket extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(tblAnimalBasket);
 
+        btnOrderAnimals.setText("Order Animals");
+        btnOrderAnimals.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOrderAnimalsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -80,25 +88,41 @@ public class Basket extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(243, 243, 243)
+                        .addComponent(btnOrderAnimals))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(165, 165, 165)
-                        .addComponent(lblBasket, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(90, Short.MAX_VALUE))
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 343, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblBasket, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(121, Short.MAX_VALUE))
+                .addComponent(btnOrderAnimals)
+                .addContainerGap(52, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    // button Order Animals clicked
+    // Saves the order to the database and
+    // transitioning the user to an order confirmation screen.
+    private void btnOrderAnimalsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrderAnimalsActionPerformed
+        // TODO add your handling code here:
+        // make a call to.. and pass to ...
+        DBManager db = new DBManager();
+        // create getter in Person class
+        db.writeOrder(currentOrder, loggedInZooKeeper.getEmail());
+        
+        // show the OrderConfirmation frame
+        OrderConfirmation oc = new OrderConfirmation(loggedInZooKeeper);
+        oc.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnOrderAnimalsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -122,13 +146,12 @@ public class Basket extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        // ignore this error
-       // java.awt.EventQueue.invokeLater(() -> new Basket().setVisible(true));
+   //     java.awt.EventQueue.invokeLater(() -> new Basket().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnOrderAnimals;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblBasket;
     private javax.swing.JTable tblAnimalBasket;
     // End of variables declaration//GEN-END:variables
 }

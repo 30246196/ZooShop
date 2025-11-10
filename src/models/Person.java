@@ -1,5 +1,4 @@
-package models;// added in stage 7
-
+package models;
 import java.util.Date;
 
 /**
@@ -30,5 +29,15 @@ public class Person {
         dob = dobIn;               
     }
     
-    
+    // aded in stage 8
+    // Setter
+    public void setEmail(String emailIn)
+    {
+        email = emailIn;
+    }
+    // getter
+    public String getEmail()
+    {
+        return email;
+    }
 }
